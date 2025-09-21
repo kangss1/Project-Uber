@@ -70,7 +70,7 @@ plt.savefig(OUT_DIR_REPORTS / "week2_distributions.png")
 plt.close()
 
 # Correlations
-plt.figure(figsize=(8,6))
+plt.figure(figsize=(12,10))
 sns.heatmap(df[num_cols].corr(), annot=True, cmap="coolwarm")
 plt.title("Numeric Correlation Matrix")
 plt.savefig(OUT_DIR_REPORTS / "week2_corr_matrix.png")
@@ -79,7 +79,7 @@ plt.close()
 # Time series plots (Daily rides)
 if "Date_parsed" in df.columns:
     daily_counts = df.groupby("Date_parsed").size()
-    daily_counts.plot(figsize=(12,6), title="Daily Rides (Raw)")
+    daily_counts.plot(figsize=(14,7), title="Daily Rides (Raw)")
     plt.ylabel("Rides")
     plt.savefig(OUT_DIR_REPORTS / "week2_daily_rides.png")
     plt.close()
@@ -114,3 +114,4 @@ with open(OUT_DIR_REPORTS / "week2_cleaning_eda.md", "w", encoding="utf-8") as f
     f.write("- week2_daily_rides.png (daily rides)\n")
     f.write("- week2_daily_rides_7day.png (7-day rolling)\n")
     f.write("- week2_daily_rides_28day.png (28-day rolling)\n")
+    #%%
