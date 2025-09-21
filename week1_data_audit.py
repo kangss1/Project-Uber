@@ -224,3 +224,4 @@ checklist_path = OUT_DIR_REPORTS / "week1_checklist.md"
 with open(checklist_path, "w", encoding="utf-8") as f:
     f.write(checklist)
 print(f"Wrote checklist → {checklist_path}")
+#%%
