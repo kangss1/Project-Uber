@@ -10,7 +10,8 @@
 #     * RandomForest / XGBoost on distance/time/vehicle/VTAT/CTAT
 # - Time-aware splits, MAE/RMSE, plots → reports/
 
-#%% 0) Imports & Paths
+#%% 
+# 0) Imports & Paths
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -47,7 +48,8 @@ REPORTS   = ROOT / "reports"
 for d in (DATA_PROC, REPORTS):
     d.mkdir(parents=True, exist_ok=True)
 
-#%% 1) Load engineered datasets (Week 3 outputs)
+#%% 
+# 1) Load engineered datasets (Week 3 outputs)
 def _find_latest(patterns):
     candidates = []
     for pat in patterns:
@@ -80,32 +82,36 @@ if "Date_parsed" in daily.columns and not np.issubdtype(daily["Date_parsed"].dty
 if "Date_parsed" in rev_model.columns and not np.issubdtype(rev_model["Date_parsed"].dtype, np.datetime64):
     rev_model["Date_parsed"] = pd.to_datetime(rev_model["Date_parsed"], errors="coerce")
 
-#%% 2) DEMAND — ARIMA baseline (univariate rides)
+#%%
+# 2) DEMAND — ARIMA baseline (univariate rides)
+from sklearn.metrics import mean_absolute_error, root_mean_squared_error
+
 N_TEST = 30  # last 30 days as test
-
-def rmse(y_true, y_pred):
-    return mean_squared_error(y_true, y_pred, squared=False)
-
 results_demand = []
 
 if HAS_ARIMA:
-    series = daily.set_index("Date_parsed")["rides"].asfreq("D")
-    # forward-fill gaps if any (rare but safe)
-    series = series.fillna(method="ffill")
+    # ensure a continuous daily index (fills any missing calendar days)
+    s = (
+        daily.set_index("Date_parsed")["rides"]
+             .asfreq("D")            # insert missing dates as NaN
+             .ffill()                # forward-fill safely (new API)
+    )
 
-    train = series.iloc[:-N_TEST]
-    test  = series.iloc[-N_TEST:]
+    # time-based split
+    train = s.iloc[:-N_TEST]
+    test  = s.iloc[-N_TEST:]
 
-    # Simple baseline (tuned lightly earlier): order=(7,1,1)
     try:
-        arima = ARIMA(train, order=(7,1,1))
+        # simple seasonal-ish baseline; we can gridsearch later
+        arima = ARIMA(train, order=(7, 1, 1))
         arima_fit = arima.fit()
         fcst = arima_fit.forecast(steps=N_TEST)
-        mae = mean_absolute_error(test.values, fcst.values)
-        r  = rmse(test.values, fcst.values)
-        results_demand.append(("ARIMA(7,1,1)", mae, r))
 
-        # Plot
+        mae  = mean_absolute_error(test.values, fcst.values)
+        rmse = root_mean_squared_error(test.values, fcst.values)
+        results_demand.append(("ARIMA(7,1,1)", mae, rmse))
+
+        # plot
         plt.figure()
         plt.plot(train.index, train.values, label="Train")
         plt.plot(test.index,  test.values,  label="Test")
@@ -114,16 +120,48 @@ if HAS_ARIMA:
         plt.xlabel("Date"); plt.ylabel("Rides"); plt.legend(); plt.tight_layout()
         plt.savefig(REPORTS / "week4_demand_arima.png", dpi=150)
         plt.close()
+
     except Exception as e:
         print("ARIMA failed:", e)
 else:
     print("statsmodels (ARIMA) not available — skipping ARIMA baseline.")
+    
+# --- SARIMA (weekly seasonality) baseline ---
+try:
+    from statsmodels.tsa.statespace.sarimax import SARIMAX
+    sar = SARIMAX(train, order=(1,1,1), seasonal_order=(1,0,1,7),
+                  enforce_stationarity=False, enforce_invertibility=False)
+    sar_fit = sar.fit(disp=False)
+    sar_fcst = sar_fit.forecast(steps=N_TEST)
 
-#%% 3) DEMAND — Tree/Boosted models on lags/rollings
-# Features from Week 3:
-lag_cols  = [c for c in ["lag_1","lag_7","lag_14"] if c in daily.columns]
-roll_cols = [c for c in ["roll_7","roll_14","roll_28"] if c in daily.columns]
-cal_cols  = [c for c in ["Weekday_num","Month"] if c in daily.columns]
+    mae = mean_absolute_error(test.values, sar_fcst.values)
+    rmse = root_mean_squared_error(test.values, sar_fcst.values)
+    results_demand.append(("SARIMA(1,1,1)(1,0,1,7)", mae, rmse))
+
+    plt.figure()
+    plt.plot(train.index, train.values, label="Train")
+    plt.plot(test.index,  test.values,  label="Test")
+    plt.plot(test.index,  sar_fcst.values, label="SARIMA Forecast")
+    plt.title("Daily Rides — SARIMA(1,1,1)(1,0,1,7)")
+    plt.xlabel("Date"); plt.ylabel("Rides"); plt.legend(); plt.tight_layout()
+    plt.savefig(REPORTS / "week4_demand_sarima.png", dpi=150)
+    plt.close()
+except Exception as e:
+    print("SARIMA failed:", e)
+    
+#%% 
+# 3) DEMAND — Tree/Boosted models on lags/rollings
+# Assumes: daily, N_TEST, REPORTS, mean_absolute_error, RMSE, RandomForestRegressor,
+#          HAS_XGB, (optional) XGBRegressor, plt are already available.
+
+from sklearn.metrics import mean_absolute_error, root_mean_squared_error
+def RMSE(y_true, y_pred):
+    return root_mean_squared_error(y_true, y_pred)
+
+# Feature sets from Week 3 engineering
+lag_cols  = [c for c in ["lag_1", "lag_7", "lag_14"] if c in daily.columns]
+roll_cols = [c for c in ["roll_7", "roll_14", "roll_28"] if c in daily.columns]
+cal_cols  = [c for c in ["Weekday_num", "Month"] if c in daily.columns]
 
 X_all = daily[lag_cols + roll_cols + cal_cols].copy()
 y_all = daily["rides"].copy()
@@ -132,22 +170,28 @@ y_all = daily["rides"].copy()
 X_train, X_test = X_all.iloc[:-N_TEST], X_all.iloc[-N_TEST:]
 y_train, y_test = y_all.iloc[:-N_TEST], y_all.iloc[-N_TEST:]
 
-# RandomForest
+# For nicer plots, use actual dates on the x-axis
+train_index = daily["Date_parsed"].iloc[:-N_TEST]
+test_index  = daily["Date_parsed"].iloc[-N_TEST:]
+
+# --- Random Forest ---
 rf = RandomForestRegressor(n_estimators=400, random_state=42, n_jobs=-1)
 rf.fit(X_train, y_train)
 yhat_rf = rf.predict(X_test)
-results_demand.append(("RF_lags", mean_absolute_error(y_test, yhat_rf), rmse(y_test, yhat_rf)))
+results_demand.append(("RF_lags",
+                       mean_absolute_error(y_test, yhat_rf),
+                       RMSE(y_test, yhat_rf)))
 
 plt.figure()
-plt.plot(y_all.index[:-N_TEST], y_all.iloc[:-N_TEST], label="Train")
-plt.plot(y_all.index[-N_TEST:], y_all.iloc[-N_TEST:], label="Test")
-plt.plot(y_all.index[-N_TEST:], yhat_rf, label="RF Forecast")
+plt.plot(train_index, y_all.iloc[:-N_TEST], label="Train")
+plt.plot(test_index,  y_all.iloc[-N_TEST:], label="Test")
+plt.plot(test_index,  yhat_rf, label="RF Forecast")
 plt.title("Daily Rides — Random Forest (lags/rollings)")
-plt.xlabel("Row (chronological)"); plt.ylabel("Rides"); plt.legend(); plt.tight_layout()
+plt.xlabel("Date"); plt.ylabel("Rides"); plt.legend(); plt.tight_layout()
 plt.savefig(REPORTS / "week4_demand_rf_lags.png", dpi=150)
 plt.close()
 
-# XGBoost (optional)
+# --- XGBoost (optional) ---
 if HAS_XGB:
     xgb = XGBRegressor(
         n_estimators=600,
@@ -161,25 +205,33 @@ if HAS_XGB:
     )
     xgb.fit(X_train, y_train)
     yhat_xgb = xgb.predict(X_test)
-    results_demand.append(("XGB_lags", mean_absolute_error(y_test, yhat_xgb), rmse(y_test, yhat_xgb)))
+    results_demand.append(("XGB_lags",
+                           mean_absolute_error(y_test, yhat_xgb),
+                           RMSE(y_test, yhat_xgb)))
 
     plt.figure()
-    plt.plot(y_all.index[:-N_TEST], y_all.iloc[:-N_TEST], label="Train")
-    plt.plot(y_all.index[-N_TEST:], y_all.iloc[-N_TEST:], label="Test")
-    plt.plot(y_all.index[-N_TEST:], yhat_xgb, label="XGB Forecast")
+    plt.plot(train_index, y_all.iloc[:-N_TEST], label="Train")
+    plt.plot(test_index,  y_all.iloc[-N_TEST:], label="Test")
+    plt.plot(test_index,  yhat_xgb, label="XGB Forecast")
     plt.title("Daily Rides — XGBoost (lags/rollings)")
-    plt.xlabel("Row (chronological)"); plt.ylabel("Rides"); plt.legend(); plt.tight_layout()
+    plt.xlabel("Date"); plt.ylabel("Rides"); plt.legend(); plt.tight_layout()
     plt.savefig(REPORTS / "week4_demand_xgb_lags.png", dpi=150)
     plt.close()
 else:
     print("XGBoost not available — skipping XGB demand model.")
 
-# Print demand results
+# --- Print demand results ---
 print("\n== Demand Baselines (MAE / RMSE) ==")
 for name, mae, r in results_demand:
     print(f"{name:12s} — MAE: {mae:.2f} | RMSE: {r:.2f}")
+    
+#%% 
+# 4) REVENUE — Baselines (log target, time-aware split)
+from sklearn.metrics import mean_absolute_error, root_mean_squared_error
 
-#%% 4) REVENUE — Baselines (log target)
+def RMSE(y_true, y_pred):
+    return root_mean_squared_error(y_true, y_pred)
+
 # Target transform to handle skew
 rev = rev_model.dropna(subset=["Booking Value"]).copy()
 rev["log_booking_value"] = np.log1p(rev["Booking Value"])
@@ -202,29 +254,29 @@ ytr_log  = train_rev["log_booking_value"].values
 yte_log  = test_rev["log_booking_value"].values
 
 def _report_rev(name, y_true_log, y_pred_log):
-    # Convert back to currency units
+    """Report MAE/RMSE in original currency units."""
     y_true = np.expm1(y_true_log)
     y_pred = np.expm1(y_pred_log)
     mae = mean_absolute_error(y_true, y_pred)
-    r   = rmse(y_true, y_pred)
+    r   = RMSE(y_true, y_pred)
     print(f"{name:12s} — MAE: {mae:.2f} | RMSE: {r:.2f}")
     return mae, r
 
 rev_results = []
 
-# Linear Regression
+# --- Linear Regression (log target) ---
 lin = LinearRegression()
 lin.fit(Xtr, ytr_log)
 yhat_lin_log = lin.predict(Xte)
 rev_results.append(("Linear(logY)",) + _report_rev("Linear(logY)", yte_log, yhat_lin_log))
 
-# RandomForest
+# --- Random Forest (log target) ---
 rf_rev = RandomForestRegressor(n_estimators=400, random_state=42, n_jobs=-1)
 rf_rev.fit(Xtr, ytr_log)
 yhat_rf_log = rf_rev.predict(Xte)
 rev_results.append(("RF(logY)",) + _report_rev("RF(logY)", yte_log, yhat_rf_log))
 
-# XGBoost (optional)
+# --- XGBoost (optional; log target) ---
 if HAS_XGB:
     xgb_rev = XGBRegressor(
         n_estimators=600,
@@ -242,21 +294,41 @@ if HAS_XGB:
 else:
     print("XGBoost not available — skipping XGB revenue model.")
 
-# Residual sanity plot (RF example) — in log space
+# --- Residual sanity plot (RF example) — log space ---
 plt.figure()
 plt.scatter(range(len(yte_log)), yte_log - yhat_rf_log, s=8)
 plt.axhline(0, linestyle="--", linewidth=1)
 plt.title("Revenue — RF Residuals (log space)")
 plt.xlabel("Test rows (chronological)"); plt.ylabel("Residual (log1p units)")
-plt.tight_layout(); plt.savefig(REPORTS / "week4_revenue_rf_residuals_log.png", dpi=150); plt.close()
+plt.tight_layout()
+plt.savefig(REPORTS / "week4_revenue_rf_residuals_log.png", dpi=150)
+plt.close()
 
-# Feature importances (RF)
+# --- Feature importances (RF) ---
 imp = pd.Series(rf_rev.feature_importances_, index=X_cols).sort_values(ascending=False)
 imp.to_csv(REPORTS / "week4_revenue_rf_importances.csv")
 print("\nTop RF Revenue Importances:")
 print(imp.head(12))
 
-#%% 5) Write a short summary to reports/
+# Concise results table
+rev_table = pd.DataFrame(
+    [{"Model": n, "MAE": mae, "RMSE": rmse} for n, mae, rmse in rev_results]
+).sort_values("MAE")
+print("\nRevenue baseline summary:")
+print(rev_table.to_string(index=False))
+
+# --- Plot RF importances (Top 15) ---
+imp_sorted = imp.head(15)[::-1]  # take top 15, reverse for horizontal plot
+plt.figure(figsize=(6,5))
+plt.barh(imp_sorted.index, imp_sorted.values)
+plt.title("Revenue — RF Feature Importances (Top 15)")
+plt.xlabel("Importance")
+plt.tight_layout()
+plt.savefig(REPORTS / "week4_revenue_rf_importances_plot.png", dpi=150)
+plt.close()
+
+#%% 
+# 5) Write a short summary to reports/
 summary = dedent(f"""
 # Week 4 — Baseline Results
 
@@ -283,4 +355,5 @@ with open(REPORTS / "week4_baselines_summary.md", "w", encoding="utf-8") as f:
     f.write(summary)
 
 print("\nWrote:", REPORTS / "week4_baselines_summary.md")
-print("✅ Week 4 baselines complete.")
+print("Week 4 baselines complete!!")
+# %%
