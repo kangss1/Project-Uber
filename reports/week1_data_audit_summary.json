@@ -1,0 +1,18 @@
+{
+  "shape": {
+    "rows": 150000,
+    "cols": 26
+  },
+  "duplicates": {
+    "full_row": 0,
+    "unique_booking_ids": 148767
+  },
+  "date_parse": {
+    "date_nat": 0,
+    "hour_nan": 0,
+    "timestamp_nat": 0
+  },
+  "flags": [
+    "- 1,233 possible duplicate booking rows by 'Booking ID'."
+  ]
+}
