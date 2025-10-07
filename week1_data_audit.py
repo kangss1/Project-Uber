@@ -234,7 +234,7 @@ for col, (lo, hi) in CONFIG["rating_bounds"].items():
         s = pd.to_numeric(df[col], errors="coerce")
         n_out = int(((s < lo) | (s > hi)).sum())
         if n_out > 0:
-            flag_msgs.append(f"- {col}: {n_out} values outside {lo}–{hi} range.")
+            flag_msgs.append(f"- {col}: {n_out} values outside {lo}-{hi} range.")
 
 # Hard caps (domain sanity checks)
 for col, cap in CONFIG["hard_caps"].items():
