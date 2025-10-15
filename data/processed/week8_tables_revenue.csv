@@ -1,0 +1,3 @@
+Model,MAE,RMSE,Source
+RF(logY),180.86340165443733,303.3670268435977,week8_tables_revenue.csv
+XGB(logY),181.21978060622413,303.5739959842699,week8_tables_revenue.csv
