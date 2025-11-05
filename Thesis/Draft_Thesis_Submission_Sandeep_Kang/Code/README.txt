@@ -7,16 +7,17 @@ Term: Fall 2025
 ==============================================================
 
 Project Title:
-Machine Learning-Based Forecasting of Ride-Hailing Demand, Revenue, and Operations: A Case Study of Delhi NCR, India
+Machine Learning-Based Forecasting of Ride-Hailing Demand, Revenue, and Operations: 
+A Case Study of Delhi NCR, India
 
 ==============================================================
 1. Overview
 ==============================================================
-This folder contains all Python scripts used for data processing. 
+This folder contains all Python scripts used for data processing, 
 feature engineering, model training, evaluation, and visualization 
 for the Senior Thesis project. Each “week” script corresponds to a 
 research milestone, while each “figure” script reproduces visuals 
-cited in the thesis (Figures 3–16).
+cited in the thesis (Figures 3, 5, and 10-16).
 
 All scripts include inline documentation, consistent variable naming, 
 and modular structure. They can be executed sequentially or individually, 
@@ -113,12 +114,15 @@ Output:
 week7_operational_insights.py
 --------------------------------------------------------------
 Purpose:
-    Produces operational metrics such as average fare per day of week 
-    and visualizes patterns in ride pricing.
+    Produces operational metrics such as average fare per day of week, 
+    fulfillment efficiency, and visualizes temporal and spatial demand patterns.
 Required Input:
     ncr_ride_featured.csv
 Output:
-    week7_avg_fare_by_day.png
+    week7_avg_rides_per_hour.png
+    week7_fulfillment_efficiency_heatmap.png
+    week7_cancel_by_vehicle.png
+    week7_peak_heatmap_annotated.png
 
 --------------------------------------------------------------
 week8_synthesis_methods_results.py
@@ -143,59 +147,70 @@ Required Input:
 Output:
     Console-printed summary of model performance and insights.
 
+--------------------------------------------------------------
+project_analysis.py
+--------------------------------------------------------------
+Purpose:
+    Generates a comprehensive summary of dataset trends and model outputs, 
+    integrating metrics from all weekly reports. Outputs key insights and 
+    high-level operational performance indicators.
+Required Input:
+    /reports directory contents
+Output:
+    project_analysis_summary.csv
+    Console summary of key demand, revenue, and operational metrics
+
 ==============================================================
 4. Figure Diagram Scripts
 ==============================================================
 
-Figure3_diagram.py
-    Generates Figure 3 – Fare vs Distance (Peak vs Off-Peak)
-    Input: ncr_ride_featured.csv
-    Output: Figure3_diagram.png
+Figure3_ModelPerformanceComparison.py  
+    Input: ncr_ride_featured.csv  
+    Output: Figure3_ModelPerformanceComparison.png  
 
-figure5_diagram.py
-    Generates Figure 5 – Fare Distribution by Day of Week
-    Input: ncr_ride_featured.csv
-    Output: figure5_diagram.png
+Figure5_Fairness_Sustainability_Governance.py  
+    Input: None  
+    Output: Figure5_Fairness_Sustainability_Governance.png  
 
-Figure10_diagram.py
-    Generates Figure 10 – Combined Performance and Feature Importance
+Figure10_Combined_Performance_And_Features.py  
+    Generates Figure 10 – Combined Performance and Feature Importance  
     Input:
-        week5_demand_rf_tuned.png
-        week5_demand_xgb_tuned.png
-        week5_demand_xgb_importance.png
-        week5_demand_xgb_shap_summary.png
+        week5_demand_rf_tuned.png  
+        week5_demand_xgb_tuned.png  
+        week5_demand_xgb_importance.png  
+        week5_demand_xgb_shap_summary.png  
     Output:
-        Figure10_diagram.png
+        Figure10_Combined_Performance_And_Features.png  
 
-figure11_diagram.py
-    Generates Figure 11 – Average Fare by Payment Method
-    Input: ncr_ride_featured.csv
-    Output: figure11_diagram.png
+Figure11_Demand_Patterns_Composite.py  
+    Generates Figure 11 – Hourly and Weekly Demand Pattern Heatmap  
+    Input: week7_peak_top10.csv  
+    Output: Figure11_Demand_Patterns_Composite.png  
 
-figure12_diagram.py
-    Generates Figure 12 – Kernel Density of Fare per KM
-    Input: ncr_ride_featured.csv
-    Output: figure12_diagram.png
+Figure12_Revenue_Model_Comparison.py  
+    Generates Figure 12 – Fare Prediction and Revenue Model Comparison  
+    Input: week5_demand_baselines.csv, week6_revenue_metrics.csv  
+    Output: Figure12_Revenue_Model_Comparison.png  
 
-figure13_diagram.py
-    Generates Figure 13 – Average Tip Ratio by Peak Hour
-    Input: ncr_ride_featured.csv
-    Output: figure13_diagram.png
+Figure13_Spatial_Surge_Reconstructed.py  
+    Generates Figure 13 – Spatial Distribution of Surge Multipliers  
+    Input: week7_ops_brief.md  
+    Output: Figure13_Spatial_Surge_Reconstructed.png  
 
-figure14_diagram.py
-    Generates Figure 14 – Fare Distribution (Peak vs Off-Peak)
-    Input: ncr_ride_featured.csv
-    Output: figure14_diagram.png
+Figure14_Ops_Efficiency.py  
+    Generates Figure 14 – Hourly Ride Demand, Fulfillment, and Cancellation Rates  
+    Input: week7_peak_top10.csv, week7_ops_brief.md  
+    Output: Figure14_Operational_Performance_Composite_RealHours.png  
 
-Figure15_diagram.py
-    Generates Figure 15 – Correlation Matrix of Key Variables
-    Input: ncr_ride_featured.csv
-    Output: Figure15_diagram.png
+Figure15_diagram.py  
+    Generates Figure 15 – Regional Ride Flow Heatmap  
+    Input: ncr_ride_featured.csv  
+    Output: Figure15_Regional_Ride_Flow.png  
 
-figure16_diagram.py
-    Generates Figure 16 – Ride Frequency by Day of Week
-    Input: ncr_ride_featured.csv
-    Output: figure16_diagram.png
+Figure16_Emission_Reduction.py  
+    Generates Figure 16 – Emission Reduction Potential and Policy Impact  
+    Input: ncr_ride_featured.csv  
+    Output: Figure16_Emission_Reduction.png  
 
 ==============================================================
 5. How to Run the Code
@@ -209,9 +224,12 @@ To reproduce the full pipeline:
        python week3_feature_engineering.py
        ...
        python week9_interpretation_reflection.py
-3. Figures will be saved automatically as PNG files in the same directory.
+3. Figures will be saved automatically as PNG files in the Graphs directory.
 4. To regenerate any figure individually:
-       python figure13_diagram.py
+       python Figure14_Ops_Efficiency.py
+       python Figure15_diagram.py
+5. To produce summary analysis:
+       python project_analysis.py
 
 ==============================================================
 6. Notes
@@ -219,19 +237,23 @@ To reproduce the full pipeline:
 - File paths assume a flat structure within the Code folder.
 - All scripts are well-documented with clear inline comments.
 - Figures correspond directly to visuals cited in the thesis 
-  (Figures 3–16).
+  (Figures 3, 5, and 10-16).
 - Outputs are reproducible and saved automatically upon execution.
 - For evaluation, ensure the input CSVs exist in the same directory.
+- Updated Figures 11–14 use verified Week 7 report data 
+  from the /reports folder for full data consistency.
+- Figure 15 remains in its original format and is unchanged from the prior version.
+- Non-Python design files such as .drawio diagrams are excluded.
 
 ==============================================================
 7. Contact Information
 ==============================================================
-Author: Sandeep Kang
-Email: kangss@iu.edu
-Course: INFO-I 492 – Senior Thesis
-Institution: Indiana University Bloomington
-Advisor: [Instructor Name]
-Term: Fall 2025
+Author: Sandeep Kang  
+Email: kangss@iu.edu  
+Course: INFO-I 492 – Senior Thesis  
+Institution: Indiana University Bloomington  
+Advisor: [Instructor Name]  
+Term: Fall 2025  
 
 ==============================================================
 END OF README

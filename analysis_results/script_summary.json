@@ -1,0 +1,104 @@
+{
+  "week1_data_audit.py": {
+    "reads": [
+      "])\nprint("
+    ],
+    "writes": [],
+    "models": [],
+    "metrics": []
+  },
+  "week2_cleaning_eda.py": {
+    "reads": [],
+    "writes": [],
+    "models": [],
+    "metrics": []
+  },
+  "week3_feature_engineering.py": {
+    "reads": [],
+    "writes": [],
+    "models": [
+      "XGB"
+    ],
+    "metrics": []
+  },
+  "week4_baselines.py": {
+    "reads": [
+      "]))\n\n# Revenue (row-level modeling frame from Week 3)\nrev_path = _latest(["
+    ],
+    "writes": [
+      ", index=False)\nprint(",
+      ", index=False)\nprint(",
+      ")\nimp_plot = imp.head(15)[::-1]\nplt.figure(figsize=(7,5))\nplt.barh(imp_plot.index, imp_plot.values)\nplt.title("
+    ],
+    "models": [
+      "RandomForest",
+      "XGB",
+      "LinearRegression"
+    ],
+    "metrics": [
+      "rmse",
+      "mae"
+    ]
+  },
+  "week5_advanced.py": {
+    "reads": [
+      "])\ndaily = daily.sort_values("
+    ],
+    "writes": [
+      ", index=False)\n\n#%% 5) (Optional) SHAP explanation (works best with XGBoost)\nif HAS_XGB and HAS_SHAP:\n    try:\n        background = X_train.sample(min(200, len(X_train)), random_state=42)\n        explainer = shap.Explainer(best_xgb, background)\n        shap_values = explainer(X_test)\n\n        shap.plots.beeswarm(shap_values, show=False)\n        plt.tight_layout()\n        plt.savefig(REPORTS / ",
+      ", index=False)\n\nsummary = dedent(f"
+    ],
+    "models": [
+      "RandomForest",
+      "XGB"
+    ],
+    "metrics": [
+      "rmse",
+      "mae"
+    ]
+  },
+  "week6_revenue_advanced.py": {
+    "reads": [],
+    "writes": [],
+    "models": [
+      "RandomForest",
+      "XGB"
+    ],
+    "metrics": [
+      "rmse",
+      "mae",
+      "f1"
+    ]
+  },
+  "week7_operational_insights.py": {
+    "reads": [],
+    "writes": [],
+    "models": [],
+    "metrics": []
+  },
+  "week8_synthesis_methods_results.py": {
+    "reads": [
+      ")\nif ops_top10.empty:\n    ops_top10 = _try_read_csv(REPORTS / ",
+      ")\n    if not peak_tab.empty:\n        # melt and take top-10 by rides\n        longp = peak_tab.rename(columns={"
+    ],
+    "writes": [],
+    "models": [
+      "XGB"
+    ],
+    "metrics": [
+      "rmse",
+      "mae"
+    ]
+  },
+  "week9_interpretation_reflection.py": {
+    "reads": [],
+    "writes": [],
+    "models": [
+      "XGB"
+    ],
+    "metrics": [
+      "mae",
+      "accuracy"
+    ]
+  }
+}

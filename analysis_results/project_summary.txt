@@ -1,0 +1,66 @@
+PROJECT SUMMARY MAP (Week1–Week9)
+
+
+week1_data_audit.py:
+  Reads: ])
+print(
+
+week2_cleaning_eda.py:
+
+week3_feature_engineering.py:
+  Models: XGB
+
+week4_baselines.py:
+  Reads: ]))
+
+# Revenue (row-level modeling frame from Week 3)
+rev_path = _latest([
+  Writes: , index=False)
+print(, , index=False)
+print(, )
+imp_plot = imp.head(15)[::-1]
+plt.figure(figsize=(7,5))
+plt.barh(imp_plot.index, imp_plot.values)
+plt.title(
+  Models: RandomForest, XGB, LinearRegression
+  Metrics: rmse, mae
+
+week5_advanced.py:
+  Reads: ])
+daily = daily.sort_values(
+  Writes: , index=False)
+
+#%% 5) (Optional) SHAP explanation (works best with XGBoost)
+if HAS_XGB and HAS_SHAP:
+    try:
+        background = X_train.sample(min(200, len(X_train)), random_state=42)
+        explainer = shap.Explainer(best_xgb, background)
+        shap_values = explainer(X_test)
+
+        shap.plots.beeswarm(shap_values, show=False)
+        plt.tight_layout()
+        plt.savefig(REPORTS / , , index=False)
+
+summary = dedent(f
+  Models: RandomForest, XGB
+  Metrics: rmse, mae
+
+week6_revenue_advanced.py:
+  Models: RandomForest, XGB
+  Metrics: rmse, mae, f1
+
+week7_operational_insights.py:
+
+week8_synthesis_methods_results.py:
+  Reads: )
+if ops_top10.empty:
+    ops_top10 = _try_read_csv(REPORTS / , )
+    if not peak_tab.empty:
+        # melt and take top-10 by rides
+        longp = peak_tab.rename(columns={
+  Models: XGB
+  Metrics: rmse, mae
+
+week9_interpretation_reflection.py:
+  Models: XGB
+  Metrics: mae, accuracy

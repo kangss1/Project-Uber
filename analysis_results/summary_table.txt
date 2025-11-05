@@ -1,0 +1,9 @@
+week1_data_audit.py                 | -                         | -
+week2_cleaning_eda.py               | -                         | -
+week3_feature_engineering.py        | XGB                       | -
+week4_baselines.py                  | RandomForest, XGB, LinearRegression | rmse, mae
+week5_advanced.py                   | RandomForest, XGB         | rmse, mae
+week6_revenue_advanced.py           | RandomForest, XGB         | rmse, mae, f1
+week7_operational_insights.py       | -                         | -
+week8_synthesis_methods_results.py  | XGB                       | rmse, mae
+week9_interpretation_reflection.py  | XGB                       | mae, accuracy
