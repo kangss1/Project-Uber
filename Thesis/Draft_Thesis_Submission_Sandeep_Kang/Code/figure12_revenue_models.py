@@ -5,7 +5,7 @@ Combines Week 6 revenue model results for the thesis (Figure 12).
 
 Uses:
  - week6_revenue_metrics.csv
- - week6_revenue_xgb_importance.png
+ - week6_revenue_perm_importance_rf.png
 """
 
 #%%
@@ -22,7 +22,7 @@ os.makedirs(graphs_path, exist_ok=True)
 
 # Load data
 metrics = pd.read_csv(os.path.join(reports_path, "week6_revenue_metrics.csv"))
-xgb_importance = mpimg.imread(os.path.join(reports_path, "week6_revenue_xgb_importance.png"))
+rf_importance = mpimg.imread(os.path.join(reports_path, "week6_revenue_perm_importance_rf.png"))
 
 # Plot composite
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
@@ -31,10 +31,12 @@ fig, axes = plt.subplots(1, 2, figsize=(12, 5))
 metrics.plot(kind="bar", x="Model", y=["MAE", "RMSE"], ax=axes[0], color=["lightblue", "steelblue"])
 axes[0].set_title("(A) Model Performance Metrics")
 axes[0].set_ylabel("Error Value")
+axes[0].set_xlabel("Model")
+axes[0].legend(title="Metric")
 
-# Panel B: Feature Importance (image)
-axes[1].imshow(xgb_importance)
-axes[1].set_title("(B) XGBoost Feature Importance")
+# Panel B: Feature Importance (RF)
+axes[1].imshow(rf_importance)
+axes[1].set_title("(B) Random Forest Permutation Importance (log target)")
 axes[1].axis("off")
 
 plt.tight_layout()
