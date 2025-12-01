@@ -14,11 +14,11 @@ Project-Uber/
 │
 ├── Final Submissions/             # Complete research package
 │   ├── Thesis_Submissions/        # Core working directory with all essential research materials
-│   │   ├── Code/                  # Python scripts for data analysis, modeling, and figure generation
+│   │   ├── Code/                  # Python scripts for data analysis, modeling, and figure generation. Drawio files.
 │   │   ├── Documentation/         # Weekly reports, analyses, and markdown summaries
 │   │   ├── Graphs/                # Final figures used in the paper and presentation
 │   │   ├── Graphics/              # Supporting visuals and conceptual diagrams
-│   │   └── Illustrations/         # Drawio and presentation visuals
+│   │   └── Illustrations/         # Other presentation visuals (AI Generated)
 │   ├── Project_Uber_Thesis_Paper.docx
 │   └── Machine_Learning_Based_Forecasting_RideHailing_DelhiNCR.pptx
 │
