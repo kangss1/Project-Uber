@@ -44,7 +44,6 @@ Project-Uber/
 │   ├── project_summary.txt
 │   └── summary_table.txt
 │
-├── Drawio Files/                  # Editable conceptual diagrams for figures and workflows
 ├── requirements.txt               # Python dependencies
 └── README.md                      # Repository guide and navigation document
 ```
