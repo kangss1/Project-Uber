@@ -1,0 +1,25 @@
+Illustrations Descriptions for Project Uber Thesis
+
+=======================================================
+
+Slide27_ML_Optimization_Framework.png
+Label: “Efficiency–Fairness–Sustainability Optimization Summary”
+Description:
+This illustration summarizes the three key performance pillars achieved through the machine learning–based optimization framework:
+	- Efficiency: A 93% fulfillment rate representing overall service responsiveness.
+	- Fairness: A 12% improvement in regional equity across Delhi NCR zones.
+	- Sustainability: A 9% reduction in estimated CO₂ emissions through reduced idle kilometers.
+Significance:
+The figure visualizes how predictive modeling (Random Forest/XGBoost) directly contributes to operational optimization outcomes. It provides a concise visual representation of the study’s empirical achievements, showing that algorithmic optimization can jointly enhance efficiency, fairness, and environmental sustainability.
+
+-----
+
+Slide29_Future_Directions_Framework.png
+Label: “Technical, Social, and Policy Integration Model”
+Description:
+A layered conceptual diagram showing how future work will integrate technical, social, and policy dimensions of machine learning–driven ride-hailing optimization.
+	- Technical: Focuses on explainability, real-time data integration, and multi-city scalability.
+	- Social: Centers on fairness, accessibility, and user trust.
+	- Policy: Emphasizes regulatory alignment, emission targets, and urban equity standards.
+Significance:
+This illustration encapsulates the forward-looking vision of the research — expanding the framework toward adaptive, transparent, and city-aware AI for sustainable mobility planning. It reinforces the thesis conclusion by connecting predictive intelligence to broader societal and policy implications.

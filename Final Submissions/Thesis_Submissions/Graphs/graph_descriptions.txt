@@ -1,0 +1,66 @@
+Graph Descriptions for Project Uber Thesis
+=======================================================
+
+Figure6_Conceptual_Framework.png
+Description: Conceptual framework illustrating the integrated machine learning–based forecasting and optimization pipeline used in this thesis.
+Significance: This figure provides a visual summary of how forecasting, revenue modeling, and operational optimization interact as components within a unified analytical framework. It sets the foundation for understanding the entire methodological design.
+
+----
+
+Figure7_Data_Cleaning_Pipeline.png
+Description: Workflow diagram showing the steps for data validation, missing value imputation, outlier detection, and dataset normalization.
+Significance: Demonstrates the systematic approach used to ensure data quality before modeling. This process guarantees that all trip-level variables are reliable and that downstream model performance is not affected by data inconsistencies.
+
+----
+
+Figure8_Feature_Engineering_Pipeline.png
+Description: Visualization of the feature engineering process, depicting how raw trip data were transformed into temporal, spatial, and operational predictors.
+Significance: Highlights the key transformation stages that generate the model’s most predictive variables — such as lag features, rolling averages, and encoded temporal indicators — critical for improving accuracy in forecasting and revenue prediction.
+
+----
+
+Figure9_Modeling_Pipeline.png
+Description: End-to-end modeling pipeline integrating forecasting, pricing, and optimization blocks.
+Significance: Shows how the project connects demand and revenue prediction models to optimization logic, demonstrating that each analytical stage informs real-world operational decisions.
+
+----
+
+Figure10_Combined_Performance_And_Features.png
+Description: Comparative analysis of Random Forest and XGBoost model performance, with accompanying feature importance and SHAP value visualizations.
+Significance: This multi-panel figure proves that tree-based ensemble models outperform traditional statistical methods and offers interpretable insights into which variables drive prediction accuracy.
+
+----
+
+Figure11_Demand_Heatmap.png
+Description: Temporal heatmap showing hourly and weekly ride-hailing demand intensity across the Delhi NCR region.
+Significance: Reveals the dual-peak structure of urban mobility — with morning and evening surges — and provides empirical evidence for the city’s predictable commuter-based demand cycles.
+
+----
+
+Figure12_Revenue_Model_Comparison.png
+Description: Bar chart comparing the performance of Random Forest and Gradient Boosting models on revenue prediction tasks, evaluated with MAE and RMSE metrics.
+Significance: Confirms that ensemble methods capture nonlinear fare relationships better than linear regression, validating the use of tree-based algorithms for pricing analytics.
+
+----
+
+Figure13_Spatial_Surge_Reconstructed.png
+Description: Spatial map showing reconstructed surge pricing patterns across regions and time windows.
+Significance: Highlights geographic inequities in service distribution — showing where high surge zones overlap with underserved areas — reinforcing the fairness objectives of the study.
+
+----
+
+Figure14_Ops_Efficiency.png
+Description: Visualization of operational performance, illustrating fulfillment efficiency and cancellation patterns across time windows.
+Significance: Identifies periods of low efficiency (especially during evening peaks), emphasizing the operational need for predictive driver reallocation and intelligent dispatching.
+
+----
+
+Figure15_Regional_Ride_Flow.png
+Description: Flow matrix visualizing inter-regional ride connections between key nodes in Delhi NCR.
+Significance: Demonstrates strong commuter linkages between central business hubs and peripheral regions, supporting the interpretation of growing suburban integration and spatial mobility imbalance.
+
+----
+
+Figure16_Optimization_Framework.png
+Description: Diagram of the optimization framework incorporating fairness and sustainability constraints.
+Significance: Illustrates how predictive outputs (demand and revenue) feed into a multi-objective optimization model that minimizes unmet demand and emissions while improving equitable service coverage.

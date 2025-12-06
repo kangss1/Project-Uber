@@ -1,0 +1,229 @@
+Graphics Descriptions for Project Uber Thesis
+
+=======================================================
+
+week2_daily_rides.png
+Description: Daily total ride counts during the observation period.
+Significance: Establishes the baseline pattern of daily ride volume and confirms the cyclical nature of weekday versus weekend activity.
+
+-------
+
+week2_daily_rides_7day.png
+Description: Seven-day moving average of daily ride counts.
+Significance: Smooths short-term fluctuations to highlight weekly mobility cycles and recurring demand peaks.
+
+-------
+
+week2_daily_rides_28day.png
+Description: Twenty-eight-day moving average of ride volume trends.
+Significance: Reveals long-term demand momentum and helps identify seasonality or persistent shifts in ride-hailing activity.
+
+-------
+
+week2_corr_matrix.png
+Description: Correlation matrix of trip-level features such as fare, distance, duration, and surge multiplier.
+Significance: Aids in feature selection by identifying highly correlated variables that may affect model interpretability or performance.
+
+-------
+
+week2_distributions.png
+Description: Distribution plots of fare, distance, and trip duration variables.
+Significance: Illustrates the skewed nature of mobility data, supporting log-transformations applied later in the modeling process.
+
+-------
+
+week4_demand_arima.png
+Description: Time-series plot showing ARIMA model performance on hourly demand forecasting.
+Significance: Serves as a benchmark for comparing classical statistical methods against ensemble learning approaches.
+
+-------
+
+week4_demand_sarima.png
+Description: Forecast results using a SARIMA model with seasonal adjustment.
+Significance: Demonstrates the limitations of seasonally adjusted time-series models for capturing nonlinear urban demand variability.
+
+-------
+
+week4_demand_rf_lags.png
+Description: Random Forest model prediction using lag-based temporal features.
+Significance: Shows improvement in short-term forecasting accuracy once historical lag features are introduced.
+
+-------
+
+week4_demand_xgb_lags.png
+Description: XGBoost model forecast using lag and rolling window features.
+Significance: Highlights the superior adaptability of gradient boosting for modeling volatile demand fluctuations.
+
+-------
+
+week4_revenue_rf_importances_plot.png
+Description: Feature importance chart from the Random Forest revenue model.
+Significance: Identifies key determinants of fare pricing, including distance, time of day, and surge multiplier.
+
+-------
+
+week4_revenue_rf_residuals_log.png
+Description: Log-scale residual distribution for the Random Forest revenue model.
+Significance: Confirms normal residual behavior and validates the model’s stability across different price ranges.
+
+-------
+
+week5_demand_rf_tuned.png
+Description: Optimized Random Forest forecasting performance after hyperparameter tuning.
+Significance: Demonstrates measurable improvement in model accuracy following grid search optimization.
+
+-------
+
+week5_demand_xgb_tuned.png
+Description: XGBoost forecasting results after parameter tuning.
+Significance: Highlights the refined prediction capability achieved through learning-rate and tree-depth optimization.
+
+-------
+
+week5_demand_xgb_importance.png
+Description: Feature importance chart for tuned XGBoost demand forecasting model.
+Significance: Reveals that hour of day, weekday, and recent demand history are dominant predictors of short-term ride demand.
+
+-------
+
+week5_demand_xgb_shap_summary.png
+Description: SHAP summary plot showing feature influence on predicted demand.
+Significance: Provides interpretability for the XGBoost model by quantifying how individual features affect output predictions.
+
+-------
+
+week6_revenue_rf_importances.png
+Description: Random Forest feature importance ranking for fare prediction.
+Significance: Confirms operational and temporal variables as the main drivers of fare variability.
+
+-------
+
+week6_revenue_perm_importance_rf.png
+Description: Permutation importance plot for the Random Forest revenue model.
+Significance: Validates feature contribution rankings using permutation-based robustness checks.
+
+-------
+
+week6_revenue_xgb_importance.png
+Description: Feature importance plot for the XGBoost revenue model.
+Significance: Provides a comparative perspective on variable influence relative to the Random Forest model.
+
+-------
+
+week6_revenue_xgb_importances.png
+Description: Aggregated feature importance metrics from multiple XGBoost runs.
+Significance: Demonstrates consistency in feature significance across tuning iterations.
+
+-------
+
+week6_revenue_rf_residuals_log.png
+Description: Log-scaled residual distribution of the Random Forest model.
+Significance: Shows stable error variance and confirms good model fit to observed revenue data.
+
+-------
+
+week6_revenue_rf_residuals_log.png
+Description: Residual scatter plot for Random Forest fare model predictions.
+Significance: Indicates effective variance capture and absence of major bias patterns.
+
+-------
+
+week6_revenue_clusters_scatter.png
+Description: Scatterplot showing fare clusters by region and trip duration.
+Significance: Illustrates operational heterogeneity and spatial pricing behavior.
+
+-------
+
+week6_revenue_segment_hour.png
+Description: Revenue segmented by hour of day.
+Significance: Highlights temporal earnings variation, supporting inclusion of hour-based features in the model.
+
+-------
+
+week6_revenue_segment_vehicle.png
+Description: Revenue distribution by vehicle category.
+Significance: Identifies performance variation between different vehicle types, relevant for operational policy design.
+
+-------
+
+week6_revenue_shap_beeswarm_rf.png
+Description: SHAP beeswarm plot for Random Forest revenue model.
+Significance: Displays the direction and magnitude of feature effects on fare predictions.
+
+-------
+
+week6_revenue_shap_bar_rf.png
+Description: Bar plot summarizing SHAP feature influence for the Random Forest model.
+Significance: Simplifies interpretation of the relative contribution of key predictors to fare outcomes.
+
+-------
+
+week6_revenue_pdp_hour.png
+Description: Partial dependence plot showing fare sensitivity to time of day.
+Significance: Visualizes the nonlinear impact of temporal cycles on fare prediction.
+
+-------
+
+week6_revenue_pdp_distance.png
+Description: Partial dependence plot showing fare sensitivity to trip distance.
+Significance: Confirms proportional fare increase with longer trip distances, validating economic model logic.
+
+-------
+
+week7_avg_rides_per_hour.png
+Description: Average hourly rides across weekdays and weekends.
+Significance: Illustrates temporal demand trends critical for operational forecasting.
+
+-------
+
+week7_fulfillment_efficiency_heatmap.png
+Description: Heatmap showing fulfillment efficiency by time and region.
+Significance: Identifies high-demand intervals with lower driver availability, supporting fairness-aware dispatching strategies.
+
+-------
+
+week7_peak_heatmap.png
+Description: Heatmap visualizing overall hourly ride-hailing peaks.
+Significance: Establishes the foundation for identifying rush-hour congestion and unmet demand hotspots.
+
+-------
+
+week7_peak_heatmap_annotated.png
+Description: Annotated version of the peak heatmap highlighting top-demand intervals.
+Significance: Marks critical time windows requiring intervention from dynamic dispatch algorithms.
+
+-------
+
+week7_cancel_by_vehicle.png
+Description: Cancellation rate comparison by vehicle type.
+Significance: Reveals operational inefficiencies linked to specific vehicle segments, aiding resource rebalancing analysis.
+
+-------
+
+week7_cancellation_heatmap.png
+Description: Temporal heatmap of cancellation frequency.
+Significance: Demonstrates cancellation clustering during high-demand hours, validating fairness and efficiency concerns.
+
+-------
+
+week7_peak_top10.png
+Description: Ranked list of top ten demand peaks.
+Significance: Supports prioritization of high-load regions for reallocation analysis.
+
+-------
+
+week8_demand_metrics_bar.png
+Description: Bar chart comparing forecasting metrics (MAE, RMSE, R²) for ensemble models.
+Significance: Summarizes the comparative performance of Random Forest and XGBoost in demand prediction.
+
+-------
+
+week8_revenue_metrics_bar.png
+Description: Bar chart comparing revenue prediction accuracy across models.
+Significance: Consolidates financial model performance results for easy cross-reference.
+
+-------
+
+week8_ops_thumbgrid.png
+Description: Grid visualization summarizing operational efficiency metrics across time and space.
+Significance: Provides a multi-panel snapshot of fulfillment, cancellations, and emissions improvements.
